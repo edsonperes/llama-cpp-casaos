@@ -49,6 +49,7 @@ RUN apt-get update && \
 
 COPY --from=build /app/lib/ /app/
 COPY --from=build /app/build/bin/llama-server /app/
+COPY models.ini /app/models.ini
 
 WORKDIR /app
 
@@ -62,3 +63,4 @@ HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD ["curl", "-f", "http://localhost:8080/health"]
 
 ENTRYPOINT ["/app/llama-server"]
+CMD ["--models-preset", "/app/models.ini", "--models-max", "1"]

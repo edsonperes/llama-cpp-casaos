@@ -13,15 +13,7 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-      - LLAMA_ARG_HF_REPO=ggml-org/gemma-4-E2B-it-GGUF
-      - LLAMA_ARG_HF_FILE=gemma-4-e2b-it-Q8_0.gguf
-      - LLAMA_ARG_N_GPU_LAYERS=999
-      - LLAMA_ARG_CTX_SIZE=32768
-      - LLAMA_ARG_FLASH_ATTN=1
-      - LLAMA_ARG_N_PARALLEL=1
       - LLAMA_ARG_THREADS=4
-      - LLAMA_ARG_CACHE_TYPE_K=q4_0
-      - LLAMA_ARG_CACHE_TYPE_V=q4_0
       - LLAMA_ARG_CACHE_PROMPT=1
       - LLAMA_ARG_CACHE_REUSE=256
       - LLAMA_API_KEY=sk-llama-t110-S3cur3P4ss!
@@ -40,36 +32,37 @@ x-casaos:
   description:
     en_us: >-
       llama.cpp inference server with NVIDIA CUDA GPU acceleration and built-in
-      chat WebUI. Runs Google Gemma 4 E2B (Q8_0) with full GPU offload.
-      Optimized for NVIDIA Tesla P4 (8GB VRAM). The model is downloaded
-      automatically on first start (~4.97GB).
+      chat WebUI. Multi-model router with Gemma 4 E2B and Qwen 3.5 2B.
+      Switch models directly from the WebUI. Optimized for NVIDIA Tesla P4
+      (8GB VRAM). Models are downloaded automatically on first use.
     pt_br: >-
       Servidor de inferencia llama.cpp com aceleracao GPU NVIDIA CUDA e WebUI
-      de chat integrada. Roda Google Gemma 4 E2B (Q8_0) com offload total
-      na GPU. Otimizado para NVIDIA Tesla P4 (8GB VRAM). O modelo e baixado
-      automaticamente na primeira execucao (~4.97GB).
+      de chat integrada. Router multi-modelo com Gemma 4 E2B e Qwen 3.5 2B.
+      Troque de modelo direto pela WebUI. Otimizado para NVIDIA Tesla P4
+      (8GB VRAM). Modelos baixados automaticamente no primeiro uso.
   tagline:
-    en_us: Gemma 4 E2B LLM server with NVIDIA GPU
-    pt_br: Servidor LLM Gemma 4 E2B com GPU NVIDIA
+    en_us: Multi-model LLM server with NVIDIA GPU
+    pt_br: Servidor LLM multi-modelo com GPU NVIDIA
   developer: ggml-org
   author: edsonperes
   icon: https://avatars.githubusercontent.com/u/132372032?s=200&v=4
   title:
-    en_us: llama.cpp Gemma 4 (CUDA)
-    pt_br: llama.cpp Gemma 4 (CUDA)
+    en_us: llama.cpp Multi-Model (CUDA)
+    pt_br: llama.cpp Multi-Modelo (CUDA)
   category: Ai
   tips:
     before_install:
       en_us: >-
-        Requirements: NVIDIA GPU drivers and nvidia-container-toolkit must be
-        installed on the host. The Gemma 4 E2B model (~4.97GB) will be
-        downloaded automatically on first start. First boot may take several
-        minutes depending on your internet speed.
+        Requirements: NVIDIA GPU drivers and nvidia-container-toolkit.
+        Includes Gemma 4 E2B and Qwen 3.5 2B models. Gemma loads on startup,
+        Qwen loads on demand from the WebUI model selector. Only one model
+        runs at a time (8GB VRAM limit). Models download on first use.
       pt_br: >-
-        Requisitos: drivers NVIDIA e nvidia-container-toolkit instalados no
-        host. O modelo Gemma 4 E2B (~4.97GB) sera baixado automaticamente
-        na primeira execucao. A primeira inicializacao pode demorar alguns
-        minutos dependendo da velocidade da internet.
+        Requisitos: drivers NVIDIA e nvidia-container-toolkit.
+        Inclui modelos Gemma 4 E2B e Qwen 3.5 2B. Gemma carrega na
+        inicializacao, Qwen carrega sob demanda pelo seletor de modelos
+        na WebUI. Apenas um modelo roda por vez (limite 8GB VRAM).
+        Modelos baixam no primeiro uso.
   port_map: "8080"
   scheme: http
   store_app_id: llama-cpp-cuda
