@@ -50,6 +50,8 @@ RUN apt-get update && \
 COPY --from=build /app/lib/ /app/
 COPY --from=build /app/build/bin/llama-server /app/
 COPY models.ini /app/models.ini
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app
 
@@ -59,8 +61,8 @@ ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+HEALTHCHECK --interval=60s --timeout=10s --start-period=300s --retries=3 \
     CMD ["curl", "-f", "http://localhost:8080/health"]
 
-ENTRYPOINT ["/app/llama-server"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["--models-preset", "/app/models.ini", "--models-max", "1"]
