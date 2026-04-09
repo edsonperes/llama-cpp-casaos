@@ -53,6 +53,8 @@ COPY --from=build /app/build/bin/llama-server /app/
 WORKDIR /app
 
 ENV LLAMA_ARG_HOST=0.0.0.0
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 EXPOSE 8080
 
