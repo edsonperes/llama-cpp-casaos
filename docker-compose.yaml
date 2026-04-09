@@ -24,6 +24,7 @@ services:
       - LLAMA_ARG_CACHE_TYPE_V=q4_0
       - LLAMA_ARG_CACHE_PROMPT=1
       - LLAMA_ARG_CACHE_REUSE=256
+      - LLAMA_API_KEY=sk-llama-t110-S3cur3P4ss!
     deploy:
       resources:
         reservations:
