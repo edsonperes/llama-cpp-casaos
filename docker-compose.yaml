@@ -1,0 +1,69 @@
+name: llama-cpp-casaos
+
+services:
+  llama-server:
+    image: ghcr.io/edsonperes/llama-cpp-casaos:latest
+    container_name: llama-server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /DATA/AppData/llama-cpp/models:/models
+    environment:
+      - LLAMA_ARG_MODEL=/models/model.gguf
+      - LLAMA_ARG_N_GPU_LAYERS=999
+      - LLAMA_ARG_CTX_SIZE=2048
+      - LLAMA_ARG_FLASH_ATTN=1
+      - LLAMA_ARG_THREADS=4
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+x-casaos:
+  architectures:
+    - amd64
+  main: llama-server
+  description:
+    en_us: >-
+      llama.cpp inference server with NVIDIA CUDA GPU acceleration and built-in
+      chat WebUI. Run large language models (LLMs) locally with full GPU offload.
+      Optimized for NVIDIA Tesla P4 (8GB VRAM). Supports GGUF models from
+      HuggingFace. Place your model files in the models volume and configure
+      via environment variables.
+    pt_br: >-
+      Servidor de inferencia llama.cpp com aceleracao GPU NVIDIA CUDA e WebUI
+      de chat integrada. Execute modelos de linguagem (LLMs) localmente com
+      offload total na GPU. Otimizado para NVIDIA Tesla P4 (8GB VRAM).
+      Suporta modelos GGUF do HuggingFace. Coloque seus modelos no volume
+      e configure via variaveis de ambiente.
+  tagline:
+    en_us: Local LLM server with NVIDIA GPU support
+    pt_br: Servidor LLM local com suporte a GPU NVIDIA
+  developer: ggml-org
+  author: edsonperes
+  icon: https://avatars.githubusercontent.com/u/132372032?s=200&v=4
+  title:
+    en_us: llama.cpp Server (CUDA)
+    pt_br: llama.cpp Server (CUDA)
+  category: Ai
+  tips:
+    before_install:
+      en_us: >-
+        Requirements: NVIDIA GPU drivers and nvidia-container-toolkit must be
+        installed on the host. Place your GGUF model files in
+        /DATA/AppData/llama-cpp/models and set LLAMA_ARG_MODEL to the full
+        path (e.g. /models/your-model.gguf). For Tesla P4 (8GB VRAM), use
+        quantized models (Q4_K_M or Q5_K_M) up to 7B-13B parameters.
+      pt_br: >-
+        Requisitos: drivers NVIDIA e nvidia-container-toolkit instalados no
+        host. Coloque seus modelos GGUF em /DATA/AppData/llama-cpp/models
+        e configure LLAMA_ARG_MODEL com o caminho completo
+        (ex: /models/seu-modelo.gguf). Para Tesla P4 (8GB VRAM), use modelos
+        quantizados (Q4_K_M ou Q5_K_M) ate 7B-13B parametros.
+  port_map: "8080"
+  scheme: http
+  store_app_id: llama-cpp-cuda
