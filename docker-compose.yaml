@@ -14,7 +14,7 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
       - LLAMA_ARG_HF_REPO=ggml-org/gemma-4-E2B-it-GGUF
-      - LLAMA_ARG_HF_FILE=gemma-4-E2B-it-Q8_0.gguf
+      - LLAMA_ARG_HF_FILE=gemma-4-e2b-it-Q8_0.gguf
       - LLAMA_ARG_N_GPU_LAYERS=999
       - LLAMA_ARG_CTX_SIZE=2048
       - LLAMA_ARG_FLASH_ATTN=1
