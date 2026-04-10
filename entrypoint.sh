@@ -52,6 +52,9 @@ mkdir -p /root/.cache/llama.cpp
 download_model "ggml-org/gemma-4-E2B-it-GGUF" "gemma-4-e2b-it-Q8_0.gguf"
 echo "[entrypoint] Gemma 4 E2B OK"
 
+download_model "Qwen/Qwen2.5-7B-Instruct-GGUF" "qwen2.5-7b-instruct-q4_k_m.gguf"
+echo "[entrypoint] Qwen 2.5 7B OK"
+
 download_model "unsloth/Qwen3.5-2B-GGUF" "Qwen3.5-2B-Q8_0.gguf"
 echo "[entrypoint] Qwen 3.5 2B OK"
 
