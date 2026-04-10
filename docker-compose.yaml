@@ -8,7 +8,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /DATA/AppData/llama-cpp/models:/root/.cache/llama.cpp
+      - /DATA/AppData/llama-cpp/cache:/root/.cache
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
