@@ -43,7 +43,7 @@ download_model "ggml-org/gemma-4-E2B-it-GGUF" "gemma-4-e2b-it-Q8_0.gguf"
 download_model "NousResearch/Hermes-3-Llama-3.1-8B-GGUF" "Hermes-3-Llama-3.1-8B.Q4_K_M.gguf"
 download_model "nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF" "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"
 download_model "unsloth/Qwen3.5-2B-GGUF" "Qwen3.5-2B-Q8_0.gguf"
-download_model "prism-ml/Bonsai-8B-gguf" "Bonsai-8B.gguf"
+download_model "NousResearch/Hermes-3-Llama-3.2-3B-GGUF" "Hermes-3-Llama-3.2-3B.Q8_0.gguf"
 
 touch "$MODELS_READY"
 echo "[entrypoint] All models ready"
