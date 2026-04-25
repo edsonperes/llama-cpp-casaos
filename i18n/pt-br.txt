@@ -309,6 +309,7 @@
 "Tool calls" => "Chamadas de ferramenta"
 "Turn" => "Turno"
 "Type a message" => "Digite uma mensagem"
+"Type a message..." => "Digite uma mensagem..."
 "Typical P" => "P típico"
 
 # ===== U =====
