@@ -4,6 +4,8 @@ set -e
 MODELS_DIR="/models"
 MODELS_READY="$MODELS_DIR/.models_ready"
 RETRY_DELAY=60
+SSH_DIR="/root/.ssh"
+TOKEN_FILE="/models/.gateway_token"
 
 # Verify file starts with "GGUF" magic bytes
 verify_gguf() {
@@ -49,6 +51,62 @@ download_model() {
     done
 }
 
+# ============================================================================
+# Setup SSH dir + permissions
+# ============================================================================
+setup_ssh() {
+    mkdir -p "$SSH_DIR"
+    chmod 700 "$SSH_DIR"
+    if [ -f "$SSH_DIR/config" ]; then
+        chmod 600 "$SSH_DIR/config"
+    fi
+    # Fix key permissions if any exist
+    find "$SSH_DIR" -type f -name "id_*" ! -name "*.pub" -exec chmod 600 {} \; 2>/dev/null || true
+    find "$SSH_DIR" -type f -name "*.pub" -exec chmod 644 {} \; 2>/dev/null || true
+}
+
+# ============================================================================
+# Generate or reuse gateway token
+# ============================================================================
+setup_token() {
+    if [ -f "$TOKEN_FILE" ]; then
+        GATEWAY_TOKEN=$(cat "$TOKEN_FILE")
+        echo "[entrypoint] Reusing existing gateway token"
+    else
+        GATEWAY_TOKEN=$(head -c 32 /dev/urandom | base64 | tr -d '/+=' | head -c 40)
+        echo "$GATEWAY_TOKEN" > "$TOKEN_FILE"
+        chmod 600 "$TOKEN_FILE"
+        echo "[entrypoint] Generated new gateway token"
+    fi
+    export GATEWAY_TOKEN
+    echo "[entrypoint] MCP gateway URL: http://127.0.0.1:8000/mcp"
+    echo "[entrypoint] MCP gateway token: $GATEWAY_TOKEN"
+}
+
+# ============================================================================
+# Start MCP SSH gateway in background
+# ============================================================================
+start_mcp_gateway() {
+    echo "[entrypoint] Starting MCP SSH gateway on 127.0.0.1:8000..."
+    npx -y supergateway \
+        --stdio "npx -y @aiondadotcom/mcp-ssh" \
+        --port 8000 \
+        --host 127.0.0.1 \
+        --outputTransport streamableHttp \
+        --header "Authorization=Bearer $GATEWAY_TOKEN" \
+        > /var/log/mcp-gateway.log 2>&1 &
+    GATEWAY_PID=$!
+    echo "[entrypoint] MCP gateway PID=$GATEWAY_PID (logs: /var/log/mcp-gateway.log)"
+}
+
+# ============================================================================
+# Main
+# ============================================================================
+mkdir -p "$MODELS_DIR"
+setup_ssh
+setup_token
+start_mcp_gateway
+
 # Models already downloaded -> offline mode
 if [ -f "$MODELS_READY" ]; then
     echo "[entrypoint] Models ready, starting server"
@@ -57,7 +115,6 @@ if [ -f "$MODELS_READY" ]; then
 fi
 
 echo "[entrypoint] Downloading models..."
-mkdir -p "$MODELS_DIR"
 
 download_model "ggml-org/gemma-4-E2B-it-GGUF" "gemma-4-E2B-it-Q8_0.gguf"
 download_model "nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF" "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"
