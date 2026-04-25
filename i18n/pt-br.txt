@@ -6,6 +6,10 @@
 
 # ===== Descricoes longas de checkboxes e settings (PRIORIDADE) =====
 "Type a message or upload files to get started" => "Digite uma mensagem ou envie arquivos para começar"
+"Record audio, type a message " => "Grave áudio, digite uma mensagem "
+"Record audio, type a message" => "Grave áudio, digite uma mensagem"
+"or upload files to get started" => "ou envie arquivos para começar"
+" or upload files to get started" => " ou envie arquivos para começar"
 "Use Enter to send messages and Shift + Enter for new lines. When disabled, use Ctrl/Cmd + Enter." => "Use Enter para enviar mensagens e Shift + Enter para nova linha. Quando desativado, use Ctrl/Cmd + Enter."
 "Enable "Continue" button for assistant messages. Currently works only with non-reasoning models." => "Ativa o botão "Continuar" nas mensagens do assistente. Atualmente funciona apenas com modelos sem raciocínio."
 "Parse PDF as image instead of text. Automatically falls back to text processing for non-vision models." => "Processa PDF como imagem em vez de texto. Volta automaticamente para processamento de texto em modelos sem visão."
