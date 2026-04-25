@@ -9,7 +9,6 @@ services:
       - "8080:8080"
     volumes:
       - /DATA/AppData/llama-cpp/models:/models
-      - /DATA/AppData/llama-cpp/ssh:/root/.ssh
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
@@ -18,7 +17,6 @@ services:
       - LLAMA_ARG_THREADS=4
       - LLAMA_ARG_CACHE_PROMPT=1
       - LLAMA_ARG_CACHE_REUSE=256
-      - LLAMA_ARG_WEBUI_MCP_PROXY=1
       - LLAMA_API_KEY=sk-llama-t110-S3cur3P4ss!
     deploy:
       resources:
