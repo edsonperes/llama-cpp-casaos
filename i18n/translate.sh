@@ -46,7 +46,6 @@ while IFS= read -r line || [ -n "$line" ]; do
     [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
 
     # Extrair "EN" e "PT" do formato: "EN" => "PT"
-    # Aceita aspas duplas em ambos os lados
     en=$(printf '%s' "$line" | sed -n 's/^"\(.*\)"[[:space:]]*=>[[:space:]]*"\(.*\)"[[:space:]]*$/\1/p')
     pt=$(printf '%s' "$line" | sed -n 's/^"\(.*\)"[[:space:]]*=>[[:space:]]*"\(.*\)"[[:space:]]*$/\2/p')
 
@@ -60,18 +59,51 @@ while IFS= read -r line || [ -n "$line" ]; do
     # Escapar / e & na substituicao
     pt_esc=$(printf '%s' "$pt" | sed -e 's/[\/&]/\\&/g')
 
-    # Aplicar substituicoes em 4 contextos diferentes:
+    # Aplicar substituicoes em 4 contextos diferentes (em ordem):
     # 1. Texto entre tags: >TextoEN<     -> >TextoPT<
-    # 2. Atributo aspas duplas: ="TextoEN"  -> ="TextoPT"
-    # 3. Atributo aspas simples: ='TextoEN'  -> ='TextoPT'
-    # 4. String em codigo entre aspas duplas com contexto: : "TextoEN", -> : "TextoPT",
-    # 5. String em codigo entre aspas simples
+    # 2. Atributos texto seguros: aria-label="..", title="..", placeholder="..", alt="..", label="..", description="..", text="..", message="..", tooltip="..", confirmText="..", cancelText="..", submitText="..", helpText="..", errorMessage="..", successMessage="..", warningMessage="..", infoMessage="..", legend="..", caption="..", summary="..", heading="..", subtitle="..", subheading="..", placeholder='..'
+    #
+    # Em vez de bloquear atributos tecnicos (lookbehind),
+    # explicitamente APLICAMOS apenas em atributos UI conhecidos.
+    # Atributos tecnicos como type=, name=, id=, class=, bind:, on:, use:
+    # NUNCA serao tocados.
+
     printf '%s\0' "${TARGET_FILES[@]}" | xargs -0 sed -i \
         -e "s/>${en_esc}</>${pt_esc}</g" \
-        -e "s/=\"${en_esc}\"/=\"${pt_esc}\"/g" \
-        -e "s/='${en_esc}'/='${pt_esc}'/g" \
-        -e "s/\"${en_esc}\"/\"${pt_esc}\"/g" \
-        -e "s/'${en_esc}'/'${pt_esc}'/g"
+        -e "s/aria-label=\"${en_esc}\"/aria-label=\"${pt_esc}\"/g" \
+        -e "s/aria-description=\"${en_esc}\"/aria-description=\"${pt_esc}\"/g" \
+        -e "s/aria-placeholder=\"${en_esc}\"/aria-placeholder=\"${pt_esc}\"/g" \
+        -e "s/aria-valuetext=\"${en_esc}\"/aria-valuetext=\"${pt_esc}\"/g" \
+        -e "s/aria-roledescription=\"${en_esc}\"/aria-roledescription=\"${pt_esc}\"/g" \
+        -e "s/title=\"${en_esc}\"/title=\"${pt_esc}\"/g" \
+        -e "s/placeholder=\"${en_esc}\"/placeholder=\"${pt_esc}\"/g" \
+        -e "s/alt=\"${en_esc}\"/alt=\"${pt_esc}\"/g" \
+        -e "s/label=\"${en_esc}\"/label=\"${pt_esc}\"/g" \
+        -e "s/description=\"${en_esc}\"/description=\"${pt_esc}\"/g" \
+        -e "s/text=\"${en_esc}\"/text=\"${pt_esc}\"/g" \
+        -e "s/message=\"${en_esc}\"/message=\"${pt_esc}\"/g" \
+        -e "s/tooltip=\"${en_esc}\"/tooltip=\"${pt_esc}\"/g" \
+        -e "s/confirmText=\"${en_esc}\"/confirmText=\"${pt_esc}\"/g" \
+        -e "s/cancelText=\"${en_esc}\"/cancelText=\"${pt_esc}\"/g" \
+        -e "s/submitText=\"${en_esc}\"/submitText=\"${pt_esc}\"/g" \
+        -e "s/helperText=\"${en_esc}\"/helperText=\"${pt_esc}\"/g" \
+        -e "s/helpText=\"${en_esc}\"/helpText=\"${pt_esc}\"/g" \
+        -e "s/errorMessage=\"${en_esc}\"/errorMessage=\"${pt_esc}\"/g" \
+        -e "s/successMessage=\"${en_esc}\"/successMessage=\"${pt_esc}\"/g" \
+        -e "s/warningMessage=\"${en_esc}\"/warningMessage=\"${pt_esc}\"/g" \
+        -e "s/legend=\"${en_esc}\"/legend=\"${pt_esc}\"/g" \
+        -e "s/caption=\"${en_esc}\"/caption=\"${pt_esc}\"/g" \
+        -e "s/heading=\"${en_esc}\"/heading=\"${pt_esc}\"/g" \
+        -e "s/subtitle=\"${en_esc}\"/subtitle=\"${pt_esc}\"/g"
+
+    # Para strings em codigo TS/JS:
+    # 1. Strings literais em contexto de propriedade: label: "EN" -> label: "PT"
+    # 2. Strings em chamadas: toast.x("EN"), throw new Error("EN"), etc
+    # Aplicar SOMENTE quando precedidas de espaco/(/,/:/= e seguidas de ),;,], etc
+    # Isso evita matches em meio a outras strings.
+    printf '%s\0' "${TARGET_FILES[@]}" | xargs -0 sed -i \
+        -e "s/\\([(,:= 	]\\)\"${en_esc}\"\\([),;\\.]\\)/\\1\"${pt_esc}\"\\2/g" \
+        -e "s/\\([(,:= 	]\\)'${en_esc}'\\([),;\\.]\\)/\\1'${pt_esc}'\\2/g"
 
     count=$((count + 1))
 done < "$TRANSLATIONS_FILE"

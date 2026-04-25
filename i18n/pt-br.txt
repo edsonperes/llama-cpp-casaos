@@ -601,15 +601,10 @@
 "Last activity" => "Última atividade"
 
 # ===== Stats / numbers =====
-"tokens" => "tokens"
-"tokens/s" => "tokens/s"
 "tokens per second" => "tokens por segundo"
 "prompt tokens" => "tokens do prompt"
 "completion tokens" => "tokens da conclusão"
 "total tokens" => "total de tokens"
-"speed" => "velocidade"
-"duration" => "duração"
-"time" => "tempo"
 
 # ===== Mensagens curtinhas em telas =====
 "Untitled chat" => "Conversa sem título"
@@ -636,10 +631,6 @@
 "Uploaded" => "Enviado"
 "Uploaded files" => "Arquivos enviados"
 "Attached files" => "Arquivos anexados"
-"file" => "arquivo"
-"files" => "arquivos"
-"image" => "imagem"
-"images" => "imagens"
 
 # ===== Botoes pequenos comuns =====
 "Connect to server" => "Conectar ao servidor"
