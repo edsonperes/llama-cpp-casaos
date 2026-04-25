@@ -59,7 +59,7 @@ fi
 echo "[entrypoint] Downloading models..."
 mkdir -p "$MODELS_DIR"
 
-download_model "ggml-org/gemma-4-E2B-it-GGUF" "gemma-4-e2b-it-Q8_0.gguf"
+download_model "ggml-org/gemma-4-E2B-it-GGUF" "gemma-4-E2B-it-Q8_0.gguf"
 download_model "nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF" "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"
 download_model "unsloth/Qwen3.5-2B-GGUF" "Qwen3.5-2B-Q8_0.gguf"
 
